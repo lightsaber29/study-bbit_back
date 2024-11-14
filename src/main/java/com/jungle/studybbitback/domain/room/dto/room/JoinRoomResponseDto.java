@@ -4,13 +4,15 @@ import lombok.Getter;
 
 @Getter
 public class JoinRoomResponseDto {
-    private String message;
     private Long roomId;
+    private Long memberId;
     private int participantCount;
+    private String message;
 
-    public JoinRoomResponseDto(Long roomId, String message, int participantCount) {
+    public JoinRoomResponseDto(Long roomId, Long memberId, int participantCount, String message) {
         this.roomId = roomId;
-        this.message = message;
+        this.memberId = memberId;
         this.participantCount = participantCount;
+        this.message = message;
     }
 }

@@ -1,9 +1,9 @@
 package com.jungle.studybbitback.domain.room.service;
+
 import com.jungle.studybbitback.domain.member.entity.Member;
 import com.jungle.studybbitback.domain.member.repository.MemberRepository;
 import com.jungle.studybbitback.domain.room.dto.room.*;
 import com.jungle.studybbitback.domain.room.entity.Room;
-
 import com.jungle.studybbitback.domain.room.entity.RoomMember;
 import com.jungle.studybbitback.domain.room.respository.RoomMemberRepository;
 import com.jungle.studybbitback.domain.room.respository.RoomRepository;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +70,31 @@ public class RoomService {
         return new GetRoomResponseDto(room);
     }
 
+    public GetRoomDetailResponseDto getRoomDetail(Long id) {
+
+        Room room = roomRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 방입니다.")
+        );
+        return new GetRoomDetailResponseDto(room);
+    }
+
+    // 대시보드 접근 시 멤버 여부 확인
+    @Transactional
+    public GetRoomDashboardResponseDto getRoomDashboard(Long roomId) {
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long memberId = userDetails.getMemberId();
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+
+        // 방에 가입된 회원인지 확인
+        if (roomMemberRepository.findByRoomIdAndMemberId(roomId, memberId).isEmpty()) {
+            throw new AccessDeniedException("해당 스터디룸에 가입된 사용자만 접근할 수 있습니다.");
+        }
+
+        return new GetRoomDashboardResponseDto(room);
+    }
+
     @Transactional
     public UpdateRoomResponseDto updateRoom(Long id, UpdateRoomRequestDto requestDto) {
         Room room = roomRepository.findById(id).orElseThrow(
@@ -100,7 +126,7 @@ public class RoomService {
             throw new IllegalStateException("삭제 권한이 없습니다.");
         }
 
-        // RoomMember 레코드 삭제
+        // RoomMember 테이블도 먼저 삭제 후 함께 삭제되도록 설정
         roomMemberRepository.deleteByRoom(room);
 
         roomRepository.delete(room);
@@ -147,6 +173,6 @@ public class RoomService {
         roomMemberRepository.save(roomMember);
 
         int participantCount = roomMemberRepository.countByRoom(room);
-        return new JoinRoomResponseDto(roomId, "방에 참여했습니다.", participantCount);
+        return new JoinRoomResponseDto(roomId, memberId, participantCount, memberId +"님이 방에 참여했습니다.");
     }
 }

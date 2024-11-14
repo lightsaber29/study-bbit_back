@@ -4,7 +4,7 @@ import com.jungle.studybbitback.domain.room.entity.Room;
 import lombok.Getter;
 
 @Getter
-public class GetRoomDetailDto {
+public class GetRoomDetailResponseDto {
     private Long id;
     private String name;
     private String detail;
@@ -12,7 +12,7 @@ public class GetRoomDetailDto {
     private Integer maxParticipants;
     private String profileImageUrl;
 
-    public GetRoomDetailDto(Room room) {
+    public GetRoomDetailResponseDto(Room room) {
         this.id = room.getId();
         this.name = room.getName();
         this.detail = room.getDetail();

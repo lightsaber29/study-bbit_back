@@ -23,7 +23,7 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    // 모든 방 조회
+    // 모든 방 조회 (메인에서 보이는 전체 스터디룸 목록)
     @GetMapping
     public ResponseEntity<List<GetRoomResponseDto>> getAllRooms() {
         List<GetRoomResponseDto> rooms = roomService.getRoomAll();
@@ -35,6 +35,20 @@ public class RoomController {
     public ResponseEntity<GetRoomResponseDto> getRoomById(@PathVariable("roomId") Long id) {
         GetRoomResponseDto room = roomService.getRoomById(id);
         return ResponseEntity.ok(room);
+    }
+
+    // 상세 방 설명
+    @GetMapping("/detail/{roomId}")
+    public ResponseEntity<GetRoomDetailResponseDto> getRoomDetail(@PathVariable("roomId") Long id) {
+        GetRoomDetailResponseDto roomDetail = roomService.getRoomDetail(id);
+        return ResponseEntity.ok(roomDetail);
+    }
+
+    // 스터디룸 대시보드 홈 조회
+    @GetMapping("/dashboard/{roomId}")
+    public ResponseEntity<GetRoomDashboardResponseDto> getRoomDashboard(@PathVariable("roomId") Long id) {
+        GetRoomDashboardResponseDto roomDashboard = roomService.getRoomDashboard(id);
+        return ResponseEntity.ok(roomDashboard);
     }
 
     // 방 수정
