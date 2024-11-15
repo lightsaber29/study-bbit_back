@@ -17,7 +17,6 @@ public class GetRoomResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private Long leaderId;
-    private boolean isMeetingAcitve;
 
     public GetRoomResponseDto(Room room) {
         this.id = room.getId();
@@ -30,6 +29,5 @@ public class GetRoomResponseDto {
         this.createdAt = room.getCreatedAt();
         this.modifiedAt = room.getModifiedAt();
         this.leaderId = room.getLeaderId();
-        this.isMeetingAcitve = room.getMeetingId() != null;
     }
 }

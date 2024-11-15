@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/room")
@@ -65,26 +64,10 @@ public class RoomController {
         return ResponseEntity.ok(response);
     }
 
-    // 화상회의 시작
-    @PostMapping("/{roomId}/start-meeting")
-    public ResponseEntity<String> startMeeting(@PathVariable("roomId") Long roomId) {
-        UUID meetingId = roomService.startMeeting(roomId);
-        return ResponseEntity.ok(meetingId.toString()); // 생성된 meetingId를 반환
-    }
-
-    // 화상회의 종료
-    @PostMapping("/{roomId}/end-meeting")
-    public ResponseEntity<String> endMeeting(@PathVariable("roomId") Long roomId) {
-        roomService.endMeeting(roomId);
-        return ResponseEntity.ok("화상회의가 종료되었습니다.");
-    }
-
     // 방에 참여하기 (사용자가 스스로 방에 들어감)
     @PostMapping("/{roomId}/join")
     public ResponseEntity<JoinRoomResponseDto> joinRoom(@PathVariable("roomId") Long roomId, @RequestBody JoinRoomRequestDto requestDto) {
         JoinRoomResponseDto response = roomService.joinRoom(roomId, requestDto);
         return ResponseEntity.ok(response);
     }
-
-
 }
