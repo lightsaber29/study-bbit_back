@@ -25,7 +25,7 @@ public class RoomController {
 
     // 모든 방 조회 (메인에서 보이는 전체 스터디룸 목록)
     @GetMapping
-    public ResponseEntity<List<GetRoomResponseDto>> getAllRooms() {
+    public ResponseEntity<List<GetRoomResponseDto>> getRoomAll() {
         List<GetRoomResponseDto> rooms = roomService.getRoomAll();
         return ResponseEntity.ok(rooms);
     }
