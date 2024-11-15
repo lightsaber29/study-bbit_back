@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -21,7 +22,6 @@ public class Room extends ModifiedTimeEntity {
     @Column(name = "room_id")
     private Long id;
 
-    //name, roomUrl, participants,max~는 변경 불가
     @Column(nullable = false)
     private String name;
 
@@ -38,10 +38,13 @@ public class Room extends ModifiedTimeEntity {
 
     private String profileImageUrl;
 
-    @Column(nullable = false, name = "leader_id") //leaderId로 쓸 ID임
+    @Column(nullable = false, name = "leader_id")
     private Long leaderId;
 
-    @OneToMany (mappedBy = "room")
+    @Column(name = "meeting_id", columnDefinition = "UUID", unique = true)
+    private UUID meetingId;
+
+    @OneToMany(mappedBy = "room")
     private Set<RoomBoard> roomBoard = new HashSet<>();
 
     public Room(CreateRoomRequestDto requestDto, Long memberId) {
@@ -55,10 +58,30 @@ public class Room extends ModifiedTimeEntity {
         this.leaderId = memberId;
     }
 
+    // 테스트 전용 id 생성
+    public Room(Long id, CreateRoomRequestDto requestDto, Long leaderId) {
+        this.id = id; // 테스트용 id
+        this.name = requestDto.getName();
+        this.roomUrl = requestDto.getRoomUrl();
+        this.password = requestDto.getPassword();
+        this.detail = requestDto.getDetail();
+        this.participants = 1;
+        this.maxParticipants = requestDto.getMaxParticipants();
+        this.profileImageUrl = requestDto.getProfileImageUrl();
+        this.leaderId = leaderId;
+    }
+
     public void updateDetails(UpdateRoomRequestDto requestDto) {
         this.password = requestDto.getPassword();
         this.detail = requestDto.getDetail();
         this.profileImageUrl = requestDto.getProfileImageUrl();
     }
 
+    public void startMeeting() {
+        this.meetingId = UUID.randomUUID(); //화상 회의 시작할 경우 화상회의id 생성
+    }
+
+    public void endMeeting() {
+        this.meetingId = null;
+    }
 }

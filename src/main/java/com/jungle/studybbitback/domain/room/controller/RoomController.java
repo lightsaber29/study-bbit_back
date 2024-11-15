@@ -70,4 +70,6 @@ public class RoomController {
         JoinRoomResponseDto response = roomService.joinRoom(roomId, requestDto);
         return ResponseEntity.ok(response);
     }
+    
+    //화상회의 시작, 종료, 참여 아래로 구현 예정
 }
