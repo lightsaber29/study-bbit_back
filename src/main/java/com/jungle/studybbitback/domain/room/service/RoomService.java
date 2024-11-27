@@ -85,8 +85,8 @@ public class RoomService {
                             .orElseThrow(() -> new IllegalArgumentException("방장 정보를 찾을 수 없습니다."));
                     return new GetRoomResponseDto(
                             room,
-                            leader.getProfileImageUrl(),
-                            leader.getNickname() // 방장 닉네임 추가
+                            leader.getNickname(),
+                            leader.getProfileImageUrl()
                     );
                 });
     }
@@ -100,8 +100,9 @@ public class RoomService {
         );
         return new GetRoomResponseDto(
                 room,
-                leader.getProfileImageUrl(),
-                leader.getNickname()
+                leader.getNickname(),
+                leader.getProfileImageUrl()
+
         );
     }
 
@@ -113,8 +114,8 @@ public class RoomService {
             );
             return new GetRoomResponseDto(
                     room,
-                    leader.getProfileImageUrl(),
-                    leader.getNickname()
+                    leader.getNickname(),
+                    leader.getProfileImageUrl()
             );
         });
     }
